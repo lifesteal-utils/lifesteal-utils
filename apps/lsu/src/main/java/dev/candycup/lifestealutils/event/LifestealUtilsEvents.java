@@ -3,6 +3,7 @@ package dev.candycup.lifestealutils.event;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
+import lombok.Setter;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.Minecraft;
@@ -277,29 +278,17 @@ public final class LifestealUtilsEvents {
         void onContainerContentSet(ContainerContentSetEvent event);
     }
 
+    @Getter
     public static class ContainerContentSetEvent extends LSUEvent {
         private final AbstractContainerMenu menu;
+        /**
+         * plain-text title of the currently open screen, or empty string if none
+         */
         private final String screenTitle;
 
         public ContainerContentSetEvent(AbstractContainerMenu menu, String screenTitle) {
             this.menu = menu;
             this.screenTitle = screenTitle;
-        }
-
-        public AbstractContainerMenu getMenu() {
-            return menu;
-        }
-
-        /**
-         * plain-text title of the currently open screen, or empty string if none
-         */
-        public String getScreenTitle() {
-            return screenTitle;
-        }
-
-        @Override
-        public boolean isCancellable() {
-            return false;
         }
     }
 
@@ -318,6 +307,7 @@ public final class LifestealUtilsEvents {
     public record GatewayMessageEvent(String type, JsonObject data) {
     }
 
+    @Getter
     public static class ClientAttackEvent extends LSUEvent {
         private final Entity target;
         private final long timestamp;
@@ -327,16 +317,8 @@ public final class LifestealUtilsEvents {
             this.timestamp = timestamp;
         }
 
-        public Entity getTarget() {
-            return target;
-        }
-
         public int getTargetId() {
             return target != null ? target.getId() : -1;
-        }
-
-        public long getTimestamp() {
-            return timestamp;
         }
 
         @Override
@@ -345,23 +327,16 @@ public final class LifestealUtilsEvents {
         }
     }
 
+    @Getter
     public static class ClientTickEvent extends LSUEvent {
         private final Minecraft client;
 
         public ClientTickEvent(Minecraft client) {
             this.client = client;
         }
-
-        public Minecraft getClient() {
-            return client;
-        }
-
-        @Override
-        public boolean isCancellable() {
-            return false;
-        }
     }
 
+    @Getter
     public static class ChatMessageSentEvent extends LSUEvent {
         private final String message;
 
@@ -369,16 +344,13 @@ public final class LifestealUtilsEvents {
             this.message = message;
         }
 
-        public String getMessage() {
-            return message;
-        }
-
         @Override
         public boolean isCancellable() {
             return true;
         }
     }
 
+    @Getter
     public static class ChatMessageReceivedEvent extends LSUEvent {
         private final Component message;
         private Component modifiedMessage;
@@ -386,14 +358,6 @@ public final class LifestealUtilsEvents {
         public ChatMessageReceivedEvent(Component message) {
             this.message = message;
             this.modifiedMessage = message;
-        }
-
-        public Component getMessage() {
-            return message;
-        }
-
-        public Component getModifiedMessage() {
-            return modifiedMessage;
         }
 
         public void setModifiedMessage(Component modifiedMessage) {
@@ -406,6 +370,7 @@ public final class LifestealUtilsEvents {
         }
     }
 
+    @Getter
     public static class ItemRenderEvent extends LSUEvent {
         private final ItemStack itemStack;
         private final PoseStack poseStack;
@@ -417,34 +382,16 @@ public final class LifestealUtilsEvents {
             this.isRare = isRare;
         }
 
-        public ItemStack getItemStack() {
-            return itemStack;
-        }
-
-        public PoseStack getPoseStack() {
-            return poseStack;
-        }
-
-        public boolean isRare() {
-            return isRare;
-        }
-
         @Override
         public boolean isCancellable() {
             return true;
         }
     }
 
+    @Setter
+    @Getter
     public static class SplashTextRequestEvent extends LSUEvent {
         private String splashText;
-
-        public String getSplashText() {
-            return splashText;
-        }
-
-        public void setSplashText(String splashText) {
-            this.splashText = splashText;
-        }
     }
 
     public static class LifestealShardSwapEvent extends LSUEvent {
@@ -457,13 +404,9 @@ public final class LifestealUtilsEvents {
             this.shardName = shardName;
             this.fromShard = fromShard;
         }
-
-        @Override
-        public boolean isCancellable() {
-            return false;
-        }
     }
 
+    @Getter
     public static class ServerChangeEvent extends LSUEvent {
         private final Type type;
         private final String serverAddress;
@@ -478,14 +421,6 @@ public final class LifestealUtilsEvents {
             this.serverAddress = serverAddress;
         }
 
-        public Type getType() {
-            return type;
-        }
-
-        public String getServerAddress() {
-            return serverAddress;
-        }
-
         public boolean isConnected() {
             return type == Type.CONNECTED;
         }
@@ -493,13 +428,9 @@ public final class LifestealUtilsEvents {
         public boolean isDisconnected() {
             return type == Type.DISCONNECTED;
         }
-
-        @Override
-        public boolean isCancellable() {
-            return false;
-        }
     }
 
+    @Getter
     public static class PlayerNameRenderEvent extends LSUEvent {
         public enum RenderContext {
             NAMETAG,
@@ -516,22 +447,6 @@ public final class LifestealUtilsEvents {
             this.renderContext = renderContext;
             this.originalDisplayName = originalDisplayName;
             this.modifiedDisplayName = originalDisplayName;
-        }
-
-        public String getPlayerName() {
-            return playerName;
-        }
-
-        public RenderContext getRenderContext() {
-            return renderContext;
-        }
-
-        public Component getOriginalDisplayName() {
-            return originalDisplayName;
-        }
-
-        public Component getModifiedDisplayName() {
-            return modifiedDisplayName;
         }
 
         public void setModifiedDisplayName(Component displayName) {
