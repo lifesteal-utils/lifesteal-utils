@@ -72,7 +72,7 @@ public final class ShopParser {
 
         List<ShopView.ListingRow> listings = new ArrayList<>();
         for (SlotSnapshot item : shopItems) {
-            if (item.empty() || !containsLore(item, CLICK_TO_BUY)) {
+            if (item.empty() || !containsLore(item, CLICK_TO_BUY) || item.stack() == null || item.stack().isEmpty()) {
                 continue;
             }
 

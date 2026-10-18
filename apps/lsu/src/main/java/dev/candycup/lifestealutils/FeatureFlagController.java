@@ -23,7 +23,7 @@ import java.util.regex.PatternSyntaxException;
 public final class FeatureFlagController {
     private static final Logger LOGGER = LoggerFactory.getLogger("lifestealutils/feature-flags");
     private static final Gson GSON = new GsonBuilder().create();
-    private static final String FEATURE_FLAG_URL = "https://karkkikuppi.github.io/lifesteal-utils/registry/remote.json";
+    private static final String FEATURE_FLAG_URL = "https://lifesteal-utils.github.io/lifesteal-utils/registry/remote.json";
     private static final String REGISTRY_REMOTE_PATH = "registry/remote.json";
 
     private static FeatureFlagPayload payload = new FeatureFlagPayload();
