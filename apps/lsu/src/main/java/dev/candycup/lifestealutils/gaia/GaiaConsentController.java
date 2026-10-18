@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public final class GaiaConsentController {
     private static final Logger LOGGER = LoggerFactory.getLogger("lifestealutils/gaia");
-    private static final String CONSENT_URL = "https://lifesteal-utils.github.io/lifesteal-utils/registry/Gaia%20Notice.md";
+    private static final String CONSENT_URL = "https://lifesteal-utils.github.io/lifesteal-utils-registry/Gaia%20Notice.md";
     private static final String CACHE_BUSTER_PARAM = "?v=";
 
     private static final AtomicInteger CONTENT_VERSION = new AtomicInteger(0);
