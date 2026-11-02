@@ -220,8 +220,8 @@ public class HudElementEditor extends DrawableScreen {
             );
 
             Component label = labelSupplier.get();
-            int textX = UiRenderUtils.centeredTextX(context.minecraft().font, label, bounds);
-            int textY = UiRenderUtils.centeredTextY(context.minecraft().font, bounds);
+            int textX = UiRenderUtils.drawCenteredStringX(context.minecraft().font, label, bounds);
+            int textY = UiRenderUtils.drawCenteredStringY(context.minecraft().font, bounds);
             context.graphics().drawString(context.minecraft().font, label, textX, textY, 0xFFFFFFFF, true);
         }
 

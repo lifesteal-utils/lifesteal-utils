@@ -226,14 +226,22 @@ public final class RareItems {
 
     private static boolean isDropKeyDown() {
         Minecraft client = Minecraft.getInstance();
-        return InputConstants.isKeyDown(
-                //? if >1.21.8 {
-                client.getWindow(),
-                //?} else {
-                /*client.getWindow().handle(),
-                 *///?}
+
+        return
+                //? if <26.3 {
+                InputConstants.isKeyDown(
+                        //? if >1.21.8 {
+                        client.getWindow(),
+                        //?} else {
+                        /*client.getWindow().handle(),
+                         *///?}
+                        KeyBindingHelper.getBoundKeyOf(client.options.keyDrop).getValue()
+                );
+        //?} else {
+        /*InputConstants.isKeyDown(
                 KeyBindingHelper.getBoundKeyOf(client.options.keyDrop).getValue()
         );
+        *///?}
     }
 
     private static void deferredTick() {
