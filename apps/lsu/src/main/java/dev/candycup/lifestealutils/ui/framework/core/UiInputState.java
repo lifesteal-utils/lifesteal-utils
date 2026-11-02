@@ -1,14 +1,23 @@
 package dev.candycup.lifestealutils.ui.framework.core;
 
+
 import net.minecraft.client.Minecraft;
+//? if <26.3 {
 import org.lwjgl.glfw.GLFW;
+//?} else {
+/*import com.mojang.blaze3d.platform.InputConstants;
+import org.lwjgl.sdl.SDLMouse;
+*///?}
 
 /**
  * captures input state for ui interactions.
  */
 public final class UiInputState {
+
+    //? if <26.3 {
     private static final int LEFT_BUTTON = GLFW.GLFW_MOUSE_BUTTON_1;
     private static final int RIGHT_BUTTON = GLFW.GLFW_MOUSE_BUTTON_2;
+     //?}
 
     private final double mouseX;
     private final double mouseY;
@@ -47,18 +56,36 @@ public final class UiInputState {
     }
 
     public static UiInputState from(Minecraft minecraft, UiInputState previous, double scrollX, double scrollY) {
-        long handle = minecraft.getWindow().handle();
         double mouseX = minecraft.mouseHandler.getScaledXPos(minecraft.getWindow());
         double mouseY = minecraft.mouseHandler.getScaledYPos(minecraft.getWindow());
+
+        //? if <26.3 {
+        long handle = minecraft.getWindow().handle();
+
         boolean leftDown = GLFW.glfwGetMouseButton(handle, LEFT_BUTTON) == GLFW.GLFW_PRESS;
         boolean rightDown = GLFW.glfwGetMouseButton(handle, RIGHT_BUTTON) == GLFW.GLFW_PRESS;
+
         boolean shiftDown = GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS
                 || GLFW.glfwGetKey(handle, GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS;
+        //?} else {
+        /*int mouseState = SDLMouse.SDL_GetMouseState(null, null);
+
+        boolean leftDown = (mouseState & SDLMouse.SDL_BUTTON_LMASK) != 0;
+        boolean rightDown = (mouseState & SDLMouse.SDL_BUTTON_RMASK) != 0;
+
+        boolean shiftDown = InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)
+                || InputConstants.isKeyDown(InputConstants.KEY_RSHIFT);
+        *///?}
 
         boolean leftClicked = leftDown && (previous == null || !previous.leftDown);
         boolean leftReleased = !leftDown && previous != null && previous.leftDown;
 
-        return new UiInputState(mouseX, mouseY, leftDown, rightDown, leftClicked, leftReleased, shiftDown, scrollX, scrollY);
+        return new UiInputState(
+                mouseX, mouseY,
+                leftDown, rightDown,
+                leftClicked, leftReleased,
+                shiftDown, scrollX, scrollY
+        );
     }
 
     public boolean isHovering(UiBounds bounds) {

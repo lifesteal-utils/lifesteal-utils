@@ -40,7 +40,6 @@ import dev.candycup.lifestealutils.ui.HudElementEditor;
 import dev.candycup.lifestealutils.ui.RadarScreen;
 import dev.candycup.lifestealutils.ui.AllianceListScreen;
 import lombok.Getter;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -55,7 +54,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
+//? if <26.3 {
 import org.lwjgl.glfw.GLFW;
+ //?} else {
+/*import com.mojang.blaze3d.platform.InputConstants;
+*///?}
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -393,14 +396,25 @@ public final class LifestealUtils implements ClientModInitializer {
 
         openHudEditorKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.lifesteal-utils.open_hud_editor",
+                //? if <26.3 {
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_H,
+                //?} else {
+                /*InputConstants.Type.KEYBOARD,
+                InputConstants.KEY_H,
+                *///?}
                 LIFESTEAL_UTIL_BINDS
         ));
+
         toggleAutoclickerKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.lifesteal-utils.toggle_autoclicker",
+                //? if <26.3 {
                 InputConstants.Type.KEYSYM,
-                GLFW.GLFW_KEY_UNKNOWN,
+                GLFW.GLFW_KEY_H,
+                //?} else {
+                /*InputConstants.Type.KEYBOARD,
+                InputConstants.KEY_H,
+                *///?}
                 LIFESTEAL_UTIL_BINDS
         ));
         //?} else {
