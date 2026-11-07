@@ -18,13 +18,13 @@ public abstract class ContainerOverlayBackgroundMixin {
             method = "extractRenderStateWithTooltipAndSubtitles",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screens/Screen;extractBackground(Lnet/minecraft/client/gui/GuiGraphics;IIF)V"
+                    target = "Lnet/minecraft/client/gui/screens/Screen;renderBackground(Lnet/minecraft/client/gui/GuiGraphics;IIF)V"
             )
     )
     private void lifestealutils$replaceContainerBackground(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!(screen instanceof ContainerOverlayBackgroundState state)
                 || !state.lifestealutils$shouldReplaceContainerBackground()) {
-            screen.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
+            screen.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
             return;
         }
 

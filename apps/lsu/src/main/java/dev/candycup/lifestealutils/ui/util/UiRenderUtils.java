@@ -8,11 +8,11 @@ public final class UiRenderUtils {
     private UiRenderUtils() {
     }
 
-    public static int centeredTextX(Font font, Component text, UiBounds bounds) {
+    public static int drawCenteredStringX(Font font, Component text, UiBounds bounds) {
         return bounds.x() + (bounds.width() - font.width(text)) / 2;
     }
 
-    public static int centeredTextY(Font font, UiBounds bounds) {
+    public static int drawCenteredStringY(Font font, UiBounds bounds) {
         return bounds.y() + (bounds.height() - font.lineHeight) / 2;
     }
 }
