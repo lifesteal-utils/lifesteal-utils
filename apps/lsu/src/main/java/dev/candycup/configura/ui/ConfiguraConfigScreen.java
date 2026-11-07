@@ -1160,14 +1160,14 @@ public final class ConfiguraConfigScreen extends Screen {
       /*int itemX = x + Math.max(0, (size - ENTRY_ICON_BASE_SIZE) / 2);
       int itemY = y + Math.max(0, (size - ENTRY_ICON_BASE_SIZE) / 2);
       int seed = itemX + itemY * 31;
-      guiGraphics.item(stack, itemX, itemY, seed);
+      guiGraphics.renderItem(stack, itemX, itemY, seed);
       *///? } else {
         float scale = (float) size / ENTRY_ICON_BASE_SIZE;
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().translate(x, y);
         guiGraphics.pose().scale(scale, scale);
         //? if >=26.1 {
-        /*guiGraphics.item(stack, 0, 0);
+        /*guiGraphics.renderItem(stack, 0, 0);
          *///?} else {
         guiGraphics.renderItem(stack, 0, 0);
         //?}
