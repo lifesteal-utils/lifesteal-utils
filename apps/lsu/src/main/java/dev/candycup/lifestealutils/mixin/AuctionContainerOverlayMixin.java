@@ -30,7 +30,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
+//? if <26.3 {
 import org.lwjgl.glfw.GLFW;
+ //?} else {
+/*import com.mojang.blaze3d.platform.InputConstants;
+*///?}
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -257,30 +261,83 @@ public abstract class AuctionContainerOverlayMixin<T extends AbstractContainerMe
         if (view == null) {
             return false;
         }
+
         if (lifestealutils$searchFocused) {
-            if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
+            if (keyCode ==
+                    //? if <26.3 {
+                    GLFW.GLFW_KEY_ENTER
+            //?} else {
+            /*InputConstants.KEY_RETURN
+                    *///?}
+                    || keyCode ==
+                    //? if <26.3 {
+                    GLFW.GLFW_KEY_KP_ENTER
+            //?} else {
+            /*InputConstants.KEY_NUMPADENTER
+            *///?}
+        ) {
                 return lifestealutils$submitSearch(view.state().searchState().searchSlot());
             }
-            if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+
+            if (keyCode ==
+                    //? if <26.3 {
+                    GLFW.GLFW_KEY_ESCAPE
+            //?} else {
+            /*InputConstants.KEY_ESCAPE
+            *///?}
+        ) {
                 lifestealutils$searchFocused = false;
                 return true;
             }
-            if (keyCode == GLFW.GLFW_KEY_BACKSPACE && !lifestealutils$searchText.isEmpty()) {
-                lifestealutils$searchText = lifestealutils$searchText.substring(0, lifestealutils$searchText.length() - 1);
+
+            if (keyCode ==
+                    //? if <26.3 {
+                    GLFW.GLFW_KEY_BACKSPACE
+            //?} else {
+            /*InputConstants.KEY_BACKSPACE
+                    *///?}
+                    && !lifestealutils$searchText.isEmpty()
+        ) {
+                lifestealutils$searchText = lifestealutils$searchText.substring(
+                        0, lifestealutils$searchText.length() - 1
+                );
                 return true;
             }
-            if (keyCode == GLFW.GLFW_KEY_DELETE) {
+
+            if (keyCode ==
+                    //? if <26.3 {
+                    GLFW.GLFW_KEY_DELETE
+            //?} else {
+            /*InputConstants.KEY_DELETE
+            *///?}
+        ) {
                 lifestealutils$searchText = "";
                 return true;
             }
+
             return true;
         }
-        if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+
+        if (keyCode ==
+                //? if <26.3 {
+                GLFW.GLFW_KEY_RIGHT
+        //?} else {
+        /*InputConstants.KEY_RIGHT
+        *///?}
+    ) {
             return lifestealutils$clickPageButton(view, true);
         }
-        if (keyCode == GLFW.GLFW_KEY_LEFT) {
+
+        if (keyCode ==
+                //? if <26.3 {
+                GLFW.GLFW_KEY_LEFT
+        //?} else {
+        /*InputConstants.KEY_LEFT
+        *///?}
+    ) {
             return lifestealutils$clickPageButton(view, false);
         }
+
         return false;
     }
 

@@ -12,7 +12,11 @@ import net.minecraft.client.Minecraft;
 //? if >1.21.8 {
 import net.minecraft.client.input.MouseButtonInfo;
 //?}
+//? if <26.3 {
 import org.lwjgl.glfw.GLFW;
+//?} else {
+/*import com.mojang.blaze3d.platform.InputConstants;
+*///?}
 
 import java.util.Locale;
 
@@ -107,25 +111,30 @@ public final class Autoclicker {
     }
 
     private static void click(Minecraft client) {
-        if (!shouldClick(client)) {
-            return;
-        }
+        if (!shouldClick(client)) return;
 
         try {
             long window = client.getWindow().handle();
             MouseHandlerInvoker mouseHandler = (MouseHandlerInvoker) client.mouseHandler;
+
             //? if >1.21.8 {
             MouseButtonInfo button = new MouseButtonInfo(autoclickerKey.getKey(), 0);
 
+            //? if <26.3 {
             mouseHandler.lifestealutils$onButton(window, button, GLFW.GLFW_PRESS);
             mouseHandler.lifestealutils$onButton(window, button, GLFW.GLFW_RELEASE);
             //?} else {
-            /*mouseHandler.lifestealutils$onButton(window, autoclickerKey.getKey(), GLFW.GLFW_PRESS, 0);
-            mouseHandler.lifestealutils$onButton(window, autoclickerKey.getKey(), GLFW.GLFW_RELEASE, 0);
+            /*mouseHandler.lifestealutils$onButton(window, button, 1);
+            mouseHandler.lifestealutils$onButton(window, button, 0);
             *///?}
+            //?} else {
+        /*mouseHandler.lifestealutils$onButton(window, autoclickerKey.getKey(), GLFW.GLFW_PRESS, 0);
+        mouseHandler.lifestealutils$onButton(window, autoclickerKey.getKey(), GLFW.GLFW_RELEASE, 0);
+        *///?}
         } catch (RuntimeException exception) {
             enabled = false;
             stopClickThread();
+
             if (!inputErrorShown) {
                 inputErrorShown = true;
                 MessagingUtils.showTranslated("lsu.autoclicker.input_unavailable");
@@ -167,8 +176,22 @@ public final class Autoclicker {
     }
 
     public enum AutoclickerKey {
-        LEFT_MOUSE_BUTTON("lsu.config.qol.autoclicker.key.left", GLFW.GLFW_MOUSE_BUTTON_LEFT),
-        RIGHT_MOUSE_BUTTON("lsu.config.qol.autoclicker.key.right", GLFW.GLFW_MOUSE_BUTTON_RIGHT);
+        LEFT_MOUSE_BUTTON(
+                "lsu.config.qol.autoclicker.key.left",
+                //? if <26.3 {
+                GLFW.GLFW_MOUSE_BUTTON_LEFT
+                //?} else {
+                /*InputConstants.MOUSE_BUTTON_LEFT
+                *///?}
+        ),
+        RIGHT_MOUSE_BUTTON(
+                "lsu.config.qol.autoclicker.key.right",
+                //? if <26.3 {
+                GLFW.GLFW_MOUSE_BUTTON_RIGHT
+                //?} else {
+                /*InputConstants.MOUSE_BUTTON_RIGHT
+                *///?}
+        );
 
         @Getter
         private final String translationKey;
