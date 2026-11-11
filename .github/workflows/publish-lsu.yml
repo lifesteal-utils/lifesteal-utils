@@ -21,6 +21,7 @@ jobs:
       artifact-version: ${{ steps.release.outputs.artifact_version }}
       release-version: ${{ steps.release.outputs.version }}
       channel: ${{ steps.release.outputs.channel }}
+      publish-matrix: ${{ steps.release.outputs.matrix }}
 
     defaults:
       run:
@@ -38,27 +39,46 @@ jobs:
           cache: gradle
           cache-dependency-path: apps/lsu/gradle/wrapper/gradle-wrapper.properties
 
-      - name: Determine release metadata
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Determine release metadata and publish matrix
         id: release
-        shell: bash
+        shell: python
         run: |
-          base_version="$(sed -n 's/^version = "\([^"]*\)"/\1/p' stonecutter.properties.toml | head -n 1)"
-          if [[ -z "$base_version" ]]; then
-            echo "Unable to read mod.version from stonecutter.properties.toml" >&2
-            exit 1
-          fi
+          import json
+          import os
+          import tomllib
 
-          if [[ "${GITHUB_REF_NAME}" == "beta" ]]; then
-            version="${base_version}-beta.${GITHUB_RUN_NUMBER}"
-            channel="beta"
-          else
-            version="$base_version"
-            channel="release"
-          fi
+          with open("stonecutter.properties.toml", "rb") as source:
+              config = tomllib.load(source)
 
-          echo "artifact_version=$base_version" >> "$GITHUB_OUTPUT"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "channel=$channel" >> "$GITHUB_OUTPUT"
+          base_version = config["mod"]["version"]
+          if not base_version:
+              raise SystemExit("mod.version must not be empty")
+
+          channel = "beta" if os.environ["GITHUB_REF_NAME"] == "beta" else "release"
+          version = f"{base_version}-beta.{os.environ['GITHUB_RUN_NUMBER']}" if channel == "beta" else base_version
+
+          include = []
+          for minecraft, properties in config.items():
+              if minecraft in ("mod", "deps"):
+                  continue
+              targets = properties["mod"]["mc_targets"].split()
+              if not targets:
+                  raise SystemExit(f"mod.mc_targets must not be empty for Minecraft {minecraft}")
+              include.append({"minecraft": minecraft, "game_versions": "\n".join(targets)})
+
+          if not include:
+              raise SystemExit("No Minecraft versions configured for publishing")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"artifact_version={base_version}\n")
+              output.write(f"version={version}\n")
+              output.write(f"channel={channel}\n")
+              output.write(f"matrix={json.dumps({'include': include})}\n")
 
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
@@ -80,25 +100,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - minecraft: "1.21.8"
-            game_versions: "1.21.8"
-          - minecraft: "1.21.9"
-            game_versions: |-
-              1.21.9
-              1.21.10
-          - minecraft: "1.21.11"
-            game_versions: "1.21.11"
-          - minecraft: "26.1"
-            game_versions: |-
-              26.1
-              26.1.1
-              26.1.2
-          - minecraft: "26.2"
-            game_versions: |-
-              26.2
-    
+      matrix: ${{ fromJSON(needs.build.outputs.publish-matrix) }}
+
     steps:
       - name: Download release jars
         uses: actions/download-artifact@v4
